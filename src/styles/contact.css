@@ -1,0 +1,44 @@
+/* ── CONTACT / CLOSE ── */
+
+.close {
+  padding: clamp(5rem, 10vw, 9rem) var(--gutter);
+  background: var(--sc-canvas);
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+.close__headline {
+  font-family: var(--sc-font-display);
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--sc-ink);
+  margin: 0 0 1.2rem;
+  max-width: 16ch;
+  text-wrap: balance;
+}
+.close__body {
+  font-family: var(--sc-font-text);
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--sc-ink-soft);
+  max-width: 48ch;
+  margin: 0 0 2rem;
+}
+.close__btn {
+  display: inline-block;
+  font-family: var(--sc-font-text);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #FFF;
+  background: #1A1A1A;
+  padding: 0.8rem 2rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: opacity 0.15s ease-out;
+}
+.close__btn:hover { opacity: 0.8; }
+.close__btn:focus-visible {
+  outline: 2px solid var(--sc-ink);
+  outline-offset: 3px;
+}

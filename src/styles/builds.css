@@ -1,0 +1,70 @@
+/* ── BUILDS: blueprint morph (signature move) ── */
+
+/* one full screen inside the pinned stage: heading, then the drawing */
+.builds__screen {
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 var(--gutter);
+}
+.builds__head { margin-bottom: 2rem; }
+
+.morph-wrap {
+  margin-top: 3rem;
+}
+.morph-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  /* leave room for the heading above it inside the pinned screen; photo
+     (cover) and drawing (slice) crop identically, so they stay aligned */
+  max-height: calc(100svh - var(--nav-h) - 21rem);
+  overflow: hidden;
+  background: var(--sc-surface);
+}
+.sec--dark .morph-stage {
+  background-color: #121212;
+  background-image:
+    linear-gradient(rgb(240 239 236 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(240 239 236 / 0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+/* no padding: the drawing is traced from the photo and must sit on it exactly
+   (both use cover / slice, so they crop the same way at any aspect ratio) */
+.morph-stage__blueprint {
+  position: absolute;
+  inset: 0;
+}
+.morph-stage__blueprint svg {
+  width: 100%;
+  height: 100%;
+  stroke: #1A1A1A;
+  stroke-width: 0.5;
+  fill: none;
+  opacity: calc(1 - var(--morph-p, 0));
+}
+/* the elevation draws itself (pathLength=1), then the detail and dimensions settle in */
+.bp-draw > * { stroke-dasharray: 1; stroke-dashoffset: calc(1 - var(--draw-p, 1)); }
+.bp-detail, .bp-dim { opacity: clamp(0, var(--draw-p, 1) * 1.6 - 0.6, 1); }
+.sec--dark .morph-stage__blueprint svg { stroke: #F0EFEC; }
+.morph-stage__photo {
+  position: absolute;
+  inset: 0;
+  opacity: var(--morph-p, 0);
+  clip-path: inset(
+    calc(50% - var(--morph-p, 0) * 50%)
+    calc(50% - var(--morph-p, 0) * 50%)
+    calc(50% - var(--morph-p, 0) * 50%)
+    calc(50% - var(--morph-p, 0) * 50%)
+  );
+}
+.morph-stage__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* phones: a taller frame, so the house is not a thin strip in a dark screen */
+@media (max-width: 700px) {
+  .morph-stage { aspect-ratio: 4 / 5; max-height: calc(100svh - var(--nav-h) - 15rem); }
+}

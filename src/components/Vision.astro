@@ -1,0 +1,29 @@
+---
+// Photo: Pedro Miranda on Unsplash (unsplash.com/photos/3QzMBrvCeyQ), Unsplash License.
+// Cropped to the hands and plans, so no third-party branding shows.
+import { Image } from 'astro:assets';
+import plans from '../assets/vision/plans-conversation.jpg';
+import '../styles/vision.css';
+---
+<section class="sec sec--tinted" id="vision">
+  <div class="split">
+    <div>
+      <div class="sc-stack" data-sc-in data-sc-stagger="60">
+        <p class="sec__label">The Vision</p>
+        <h2 class="sec__title">Every home begins with a conversation.</h2>
+        <p class="sec__body">Before a single line is drawn, we listen. Your daily rhythms, the light you love, the feeling you want when you walk through the front door. These details become the foundation of everything we build.</p>
+        <p class="sec__body">No templates, no compromises, no shortcuts. Just homes that reflect the people who live in them.</p>
+      </div>
+    </div>
+    <div class="split__media" data-sc-in>
+      <figure data-sc-reveal="left" data-sc-reveal-at="0.12 0.58">
+        <Image
+          src={plans}
+          alt="Two people reviewing a home's floor plans together at a table"
+          widths={[560, 840, 1100]}
+          sizes="(max-width: 860px) 92vw, 44vw"
+        />
+      </figure>
+    </div>
+  </div>
+</section>

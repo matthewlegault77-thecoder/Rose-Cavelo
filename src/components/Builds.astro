@@ -1,0 +1,82 @@
+---
+// From Vision to Reality: a pinned act. The elevation (traced from the photo, so
+// they line up) draws itself, then the finished home opens over it.
+// Progress wiring in scripts/builds.js.
+// Photo: Michael Brown on Unsplash (unsplash.com/photos/G48h926L2qo), Unsplash License.
+import { Image } from 'astro:assets';
+import finished from '../assets/builds/finished-home.jpg';
+import '../styles/builds.css';
+---
+<section class="sec sec--dark" id="builds" data-sc-act="pin" data-sc-span="3.8">
+  <div data-sc-stage>
+    <div class="builds__screen">
+      <div class="sc-stack builds__head">
+        <p class="sec__label" data-sc-cue="0 0.35 0">From Vision to Reality</p>
+        <h2 class="sec__title" data-sc-cue="0 0.4 0">What starts as a drawing becomes the home you will live in for decades.</h2>
+      </div>
+      <div class="morph-wrap">
+        <div class="morph-stage" id="morph">
+          <div class="morph-stage__blueprint">
+            <svg viewBox="0 0 1920 1083" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <g class="bp-draw" stroke-width="1.6">
+                {/* tower: roof slab, soffit, piers, glass */}
+                <rect x="905" y="158" width="400" height="38" pathLength="1"/>
+                <path d="M905 196 L932 330 M1305 196 L1232 330" pathLength="1"/>
+                <rect x="955" y="250" width="30" height="480" pathLength="1"/>
+                <rect x="1205" y="250" width="30" height="480" pathLength="1"/>
+                <rect x="985" y="262" width="220" height="440" pathLength="1"/>
+                {/* upper left wing */}
+                <rect x="463" y="320" width="465" height="26" pathLength="1"/>
+                <path d="M463 346 L525 410 M525 386 L930 386" pathLength="1"/>
+                <rect x="525" y="386" width="245" height="420" pathLength="1"/>
+                <rect x="603" y="392" width="78" height="190" pathLength="1"/>
+                <rect x="775" y="434" width="178" height="136" pathLength="1"/>
+                {/* entry */}
+                <rect x="720" y="570" width="232" height="42" pathLength="1"/>
+                <rect x="778" y="655" width="172" height="150" pathLength="1"/>
+                <rect x="722" y="612" width="24" height="193" pathLength="1"/>
+                {/* lower left wing */}
+                <rect x="0" y="547" width="560" height="28" pathLength="1"/>
+                <path d="M35 575 L88 612 M88 612 L515 612" pathLength="1"/>
+                <rect x="88" y="612" width="427" height="190" pathLength="1"/>
+                <rect x="180" y="615" width="126" height="185" pathLength="1"/>
+                <rect x="548" y="630" width="160" height="130" pathLength="1"/>
+                {/* upper right wing */}
+                <rect x="1235" y="328" width="455" height="32" pathLength="1"/>
+                <path d="M1265 360 L1290 390 M1290 390 L1612 390" pathLength="1"/>
+                <rect x="1305" y="400" width="236" height="100" pathLength="1"/>
+                <path d="M1232 432 L1700 432 M1232 505 L1712 505" pathLength="1"/>
+                <rect x="1685" y="372" width="106" height="133" pathLength="1"/>
+                {/* right wall, far right slab */}
+                <rect x="1210" y="505" width="710" height="255" pathLength="1"/>
+                <rect x="1750" y="480" width="170" height="45" pathLength="1"/>
+                {/* ground / retaining walls */}
+                <path d="M0 805 L1110 805 L1110 780 L1820 780 M0 870 L1920 870" pathLength="1"/>
+              </g>
+              <g class="bp-detail" stroke-width="0.9">
+                <path d="M1040 262 V702 M1145 262 V702 M985 432 H1205 M985 592 H1205"/>
+                <path d="M830 434 V570 M895 434 V570 M835 655 V805 M895 655 V805"/>
+                <path d="M245 615 V800 M180 650 H306 M590 630 V760 M660 630 V760"/>
+                <path d="M1365 400 V500 M1420 400 V500 M1480 400 V500"/>
+                <path d="M1210 570 H1920 M1210 640 H1920 M1210 700 H1920" stroke-dasharray="10 6"/>
+                <path d="M1094 110 V840" stroke-dasharray="18 6 4 6"/>
+              </g>
+              <g class="bp-dim" stroke-width="0.7">
+                <path d="M60 158 V805 M50 158 H70 M50 805 H70"/>
+                <path d="M88 960 H1790 M88 950 V970 M1790 950 V970 M1094 952 V968"/>
+              </g>
+            </svg>
+          </div>
+          <div class="morph-stage__photo">
+            <Image
+              src={finished}
+              alt="A finished modern luxury home at dusk, lit from within"
+              widths={[800, 1200, 1600, 1920]}
+              sizes="92vw"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

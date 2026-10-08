@@ -1,0 +1,76 @@
+---
+// One home per screen. The engine pins the stage (data-sc-act="pan");
+// scripts/listings.js drives the rail from scroll, trackpad swipe, keys and touch.
+// Homes come from data/listings.js.
+import { Image } from 'astro:assets';
+import { listings } from '../data/listings.js';
+import { site } from '../data/site.js';
+import '../styles/listings.css';
+
+const money = (n) => '$' + n.toLocaleString('en-CA');
+const listedOn = (iso) =>
+  new Date(`${iso}T12:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const detailUrl = (id) => `https://search.rosecalveloteam.com/search/detail/${id}`;
+---
+<section id="listings" data-sc-act="pan" data-sc-span={listings.length + 1} aria-roledescription="carousel" aria-labelledby="lx-title">
+  <div class="lx-stage" data-sc-stage>
+    <header class="lx-top">
+      <div>
+        <h2 class="lx-title" id="lx-title">Our Listings</h2>
+        <p class="lx-sub">New to market in Calgary, AB</p>
+      </div>
+      <div class="lx-arrows">
+        <button class="lx-btn" type="button" data-lx-step="-1" aria-label="Previous home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 12H4M10 6l-6 6 6 6" /></svg>
+        </button>
+        <button class="lx-btn" type="button" data-lx-step="1" aria-label="Next home">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" /></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="lx-viewport">
+      <div class="lx-rail">
+        {listings.map((l, i) => (
+          <article class="lx-slide" aria-roledescription="slide" aria-label={`${i + 1} of ${listings.length}`}>
+            <p class="lx-word" aria-hidden="true">{l.hood}</p>
+            <div class="lx-media" data-sc-tilt="4">
+              <a class="lx-frame" href={detailUrl(l.id)} tabindex="-1" aria-hidden="true">
+                <Image src={l.photo} alt="" widths={[640, 960, 1200]} sizes="(max-width: 820px) 92vw, 52vw" />
+              </a>
+              <figure class="lx-inset">
+                <Image src={l.detail} alt={`${l.detailLabel}, ${l.address}`} widths={[360, 540, 720]} sizes="(max-width: 820px) 28vw, 16vw" />
+              </figure>
+            </div>
+            <div class="lx-copy">
+              <p class="lx-hood" style="--k:0">{l.hood}</p>
+              <h3 class="lx-addr" style="--k:1">{l.address}</h3>
+              <p class="lx-city" style="--k:2">Calgary, Alberta {l.postal}</p>
+              <dl class="lx-specs" style="--k:3">
+                <div><dt>Beds</dt><dd>{l.beds}</dd></div>
+                <div><dt>Baths</dt><dd>{l.baths}</dd></div>
+                <div><dt>Sq ft</dt><dd>{l.sqft.toLocaleString('en-CA')}</dd></div>
+              </dl>
+              <div class="lx-buy" style="--k:4">
+                <p class="lx-price">{money(l.price)}</p>
+                <a class="lx-cta" href={detailUrl(l.id)}>
+                  View home
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 12h16M14 6l6 6-6 6" /></svg>
+                </a>
+              </div>
+              <p class="lx-credit" style="--k:5">Listed {listedOn(l.listed)}. Courtesy of {l.brokerage}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <footer class="lx-foot">
+      <ul class="lx-tabs" aria-label="Choose a home">
+        {listings.map((l, i) => <li><button class="lx-tab" type="button" data-lx-go={i}>{l.hood}</button></li>)}
+      </ul>
+      <a class="lx-all" href={site.searchUrl}>All Calgary homes</a>
+    </footer>
+    <div class="lx-cursor" aria-hidden="true">View</div>
+  </div>
+</section>

@@ -1,0 +1,89 @@
+:root {
+  --sc-canvas:     #FFFFFF;
+  --sc-surface:    #F5F5F3;
+  --sc-ink:        #1A1A1A;
+  --sc-ink-soft:   #6B6B6B;
+  --sc-accent:     #1A1A1A;
+  --sc-accent-ink: #FFFFFF;
+  --sc-font-display: "Archivo", system-ui, sans-serif;
+  --sc-font-text:    "Inter", system-ui, sans-serif;
+  /* the brand face: the intro, the hero headline and the name in the logo */
+  --sc-font-brand:   "Cinzel", Georgia, serif;
+  --gutter: clamp(1.5rem, 4vw, 3.5rem);
+  --nav-h: 72px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--sc-canvas);
+  color: var(--sc-ink);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 50%;
+  z-index: 1000;
+  padding: 0.7rem 1.1rem;
+  border-radius: 4px;
+  background: #1A1A1A;
+  color: #FFF;
+  font-family: var(--sc-font-text);
+  font-size: 0.8rem;
+  text-decoration: none;
+  transform: translate(-50%, -200%);
+}
+.skip-link:focus { transform: translate(-50%, 0); }
+/* ── SECTION ── */
+
+.sec {
+  padding: clamp(4rem, 8vw, 7rem) var(--gutter);
+}
+.sec--light { background: var(--sc-canvas); }
+.sec--tinted { background: var(--sc-surface); }
+.sec--dark {
+  background: #1A1A1A;
+  --sec-ink: #F0EFEC;
+  --sec-ink-soft: #999;
+  color: var(--sec-ink);
+}
+
+.sec__label {
+  font-family: var(--sc-font-text);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sc-ink-soft);
+  margin: 0 0 1.2rem;
+}
+.sec--dark .sec__label { color: var(--sec-ink-soft); }
+
+.sec__title {
+  font-family: var(--sc-font-display);
+  font-size: clamp(1.8rem, 3.6vw, 3rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--sc-ink);
+  margin: 0 0 1.6rem;
+  max-width: 20ch;
+  text-wrap: balance;
+}
+.sec--dark .sec__title { color: var(--sec-ink); }
+
+.sec__body {
+  font-family: var(--sc-font-text);
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--sc-ink-soft);
+  max-width: 56ch;
+  margin: 0;
+}
+.sec--dark .sec__body { color: var(--sec-ink-soft); }
+.sec__body + .sec__body { margin-top: 1rem; }

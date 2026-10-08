@@ -1,0 +1,22 @@
+/* ── FOOTER ── */
+
+.foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.6rem var(--gutter);
+  border-top: 1px solid rgba(0,0,0,0.06);
+  background: var(--sc-canvas);
+}
+.foot__left {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.foot__left img { height: 18px; width: auto; opacity: 0.5; }
+.foot__text {
+  font-family: var(--sc-font-text);
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--sc-ink-soft);
+}

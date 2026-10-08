@@ -1,0 +1,13 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/exp-logo.png';
+import { site } from '../data/site.js';
+import '../styles/footer.css';
+---
+<footer class="foot">
+  <div class="foot__left">
+    <Image src={logo} alt="eXp Realty" height={18} densities={[1, 2, 3]} />
+    <span class="foot__text">{site.name} at eXp Realty</span>
+  </div>
+  <span class="foot__text">&copy; {new Date().getFullYear()}</span>
+</footer>

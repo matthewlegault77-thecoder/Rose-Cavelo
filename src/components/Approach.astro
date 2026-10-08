@@ -1,0 +1,26 @@
+---
+import '../styles/approach.css';
+
+const steps = [
+  { title: 'Discovery', desc: 'We spend time understanding how you live, what you value, and what extraordinary means to you.' },
+  { title: 'Design', desc: 'Every detail is drawn with intention. Architecture, materials, and light planned as one composition.' },
+  { title: 'Build', desc: 'A curated team of craftspeople executes with the precision that luxury demands.' },
+  { title: 'Delivery', desc: 'The moment you walk through your front door and realize this is exactly what you imagined.' },
+];
+---
+<section class="sec sec--light" id="approach">
+  <div class="sc-stack" data-sc-in data-sc-stagger="60">
+    <p class="sec__label">Our Approach</p>
+    <h2 class="sec__title">Precision at every stage.</h2>
+  </div>
+
+  <ol class="steps" data-sc-in data-sc-stagger="80">
+    {steps.map((s, i) => (
+      <li class="step">
+        <p class="step__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
+        <h3 class="step__title">{s.title}</h3>
+        <p class="step__desc">{s.desc}</p>
+      </li>
+    ))}
+  </ol>
+</section>

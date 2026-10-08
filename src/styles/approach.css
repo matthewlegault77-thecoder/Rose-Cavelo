@@ -1,0 +1,43 @@
+/* ── PROCESS ── */
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin: 3rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.step {
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(0,0,0,0.12);
+}
+.step__num {
+  font-family: var(--sc-font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: rgba(0,0,0,0.22);
+  margin: 0 0 0.6rem;
+  line-height: 1;
+}
+.sec--dark .step__num { color: rgba(255,255,255,0.1); }
+.step__title {
+  font-family: var(--sc-font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--sc-ink);
+  margin: 0 0 0.5rem;
+}
+.sec--dark .step__title { color: var(--sec-ink); }
+.step__desc {
+  font-family: var(--sc-font-text);
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--sc-ink-soft);
+  margin: 0;
+}
+.sec--dark .step__desc { color: var(--sec-ink-soft); }
+
+@media (max-width: 860px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .steps { grid-template-columns: 1fr; } }

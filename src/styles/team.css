@@ -1,0 +1,103 @@
+/* ── TEAM ── */
+
+.team-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.5rem 4rem;
+  align-items: end;
+}
+.team-head > * + * { margin-top: 0; }
+.team-head .sec__title { margin: 0; }
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.2vw, 2.25rem);
+  margin: clamp(2.5rem, 5vw, 4.5rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+/* contact rows line up across the row whatever the bio length */
+.tm { display: flex; flex-direction: column; }
+.tm__photo {
+  margin: 0;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--sc-surface);
+}
+/* four studios, four backdrops: monochrome makes them one set, colour on hover */
+.tm__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 22%;
+  filter: grayscale(1) contrast(1.04);
+  transition: filter 0.6s var(--sc-ease-out), transform 0.9s var(--sc-ease-out);
+}
+.tm:hover .tm__photo img, .tm:focus-within .tm__photo img { filter: none; transform: scale(1.04); }
+@media (hover: none) { .tm__photo img { filter: none; } }
+.tm__role {
+  font-family: var(--sc-font-text);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sc-ink-soft);
+  margin: 1.3rem 0 0.5rem;
+}
+.tm__name {
+  font-family: var(--sc-font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  color: var(--sc-ink);
+  margin: 0;
+}
+.tm__bio {
+  font-family: var(--sc-font-text);
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--sc-ink-soft);
+  margin: 0.7rem 0 1.1rem;
+}
+.tm__contact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: auto 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--sc-hairline);
+}
+.tm__contact a, .team-office a {
+  width: fit-content;
+  font-family: var(--sc-font-text);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--sc-ink);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.35s var(--sc-ease-out);
+}
+.tm__contact a:hover, .team-office a:hover { background-size: 100% 1px; }
+.team-office {
+  font-family: var(--sc-font-text);
+  font-size: 0.8rem;
+  color: var(--sc-ink-soft);
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--sc-hairline);
+}
+@media (max-width: 1180px) { .team-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 960px) {
+  .team-head { grid-template-columns: minmax(0, 1fr); }
+  .team-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* phones: photo beside the text, so four people don't become four screens */
+@media (max-width: 560px) {
+  .team-grid { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .tm { display: grid; grid-template-columns: 38% minmax(0, 1fr); column-gap: 1rem; }
+  .tm__photo { grid-row: span 5; }
+  .tm__role { margin-top: 0; }
+  .tm__bio { font-size: 0.82rem; }
+}

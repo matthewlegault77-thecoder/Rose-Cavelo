@@ -1,0 +1,205 @@
+/* ── NAV (big.dk style) ──
+   No bar: the logo floats top-left and is the menu. Once the page moves it
+   sits on a small frosted pill (.is-solid) so it stays legible over content,
+   and goes light-on-dark over dark sections (.is-dark). Set by the NAV script. */
+
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  height: var(--nav-h);
+  padding: 0 var(--gutter);
+  --nav-ink: var(--sc-ink);
+  color: var(--nav-ink);
+  pointer-events: none; /* the empty strip must not block clicks on the page */
+}
+.nav.is-dark { --nav-ink: #F3F0EA; }
+.nav__logo {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: fit-content;
+  margin: 0 0 0 -0.7rem;
+  padding: 0.35rem 1rem 0.35rem 0.7rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 0.4s ease-out, border-color 0.4s ease-out;
+}
+.nav.is-solid .nav__logo {
+  background: rgb(255 255 255 / 0.82);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  backdrop-filter: blur(14px) saturate(1.4);
+  border-color: rgb(0 0 0 / 0.06);
+}
+.nav.is-dark.is-solid .nav__logo {
+  background: rgb(13 13 12 / 0.6);
+  border-color: rgb(243 240 234 / 0.1);
+}
+.nav__logo:focus-visible { outline: 2px solid var(--nav-ink); outline-offset: 4px; }
+
+/* the mark: logo at rest; hover (or open) swaps it for three lines; open turns them into an X */
+.nav__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 36px;
+}
+.nav__logo img {
+  height: 25px;
+  width: auto;
+  transition: filter 0.4s ease-out, opacity 0.25s ease-out, transform 0.4s var(--sc-ease-out);
+}
+.nav__burger {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 9px;
+}
+.nav__burger i {
+  display: block;
+  height: 2px;
+  background: var(--nav-ink);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--sc-ease-out), background-color 0.4s ease-out;
+}
+.nav__burger i:nth-child(2) { transition-delay: 40ms; }
+.nav__burger i:nth-child(3) { transition-delay: 80ms; }
+.nav__logo:hover img, .nav__logo:focus-visible img, .nav.is-open .nav__logo img { opacity: 0; transform: scale(0.6); }
+.nav__logo:hover .nav__burger i, .nav__logo:focus-visible .nav__burger i,
+.nav.is-open .nav__burger i { transform: scaleX(1); }
+/* touch screens have no hover: show the lines up front, and an X to tap closed */
+@media (hover: none) {
+  .nav__logo img { opacity: 0; }
+  .nav__burger i { transform: scaleX(1); }
+  .nav.is-open .nav__burger i { transition-delay: 0ms; transform-origin: center; }
+  .nav.is-open .nav__burger i:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  .nav.is-open .nav__burger i:nth-child(2) { transform: scaleX(0); }
+  .nav.is-open .nav__burger i:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+}
+
+/* the dropdown */
+.nav__menu {
+  pointer-events: auto;
+  position: absolute;
+  top: calc(100% - 4px);
+  left: calc(var(--gutter) - 1.4rem);
+  width: min(400px, calc(100vw - 2 * var(--gutter) + 2.8rem));
+  max-height: calc(100svh - var(--nav-h) - 1rem);
+  overflow-y: auto;
+  padding: 1.4rem 1.4rem 1.5rem;
+  background: #FFF;
+  color: #1A1A1A;
+  border: 1px solid rgb(0 0 0 / 0.06);
+  box-shadow: 0 30px 70px -24px rgb(0 0 0 / 0.35);
+  transform-origin: top left;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, -10px, 0) scale(0.98);
+  transition: opacity 0.25s ease-out, transform 0.45s var(--sc-ease-out), visibility 0s linear 0.45s;
+}
+.nav.is-open .nav__menu {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition: opacity 0.25s ease-out, transform 0.45s var(--sc-ease-out), visibility 0s;
+}
+.nav__menu-links { list-style: none; margin: 0; padding: 0; }
+.nav__menu-links li, .nav__menu-cta, .nav__menu-meta {
+  opacity: 0;
+  transform: translate3d(0, 10px, 0);
+  transition: opacity 0.3s ease-out, transform 0.5s var(--sc-ease-out);
+}
+.nav.is-open .nav__menu-links li, .nav.is-open .nav__menu-cta, .nav.is-open .nav__menu-meta {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(60ms + var(--i, 0) * 35ms);
+}
+.nav__menu-links a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  font-family: var(--sc-font-display);
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: inherit;
+  text-decoration: none;
+  transition: transform 0.35s var(--sc-ease-out), color 0.2s ease-out;
+}
+.nav__menu-links a::after {
+  content: "\2192";
+  font-family: var(--sc-font-text);
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.25s ease-out, transform 0.35s var(--sc-ease-out);
+}
+.nav__menu-links a:hover, .nav__menu-links a:focus-visible { transform: translateX(6px); }
+.nav__menu-links a:hover::after, .nav__menu-links a:focus-visible::after,
+.nav__menu-links a[aria-current]::after { opacity: 1; transform: none; }
+.nav__menu-links a:focus-visible, .nav__menu-meta a:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+.nav__menu-cta {
+  display: block;
+  margin-top: 1.2rem;
+  padding: 0.95rem 1.2rem;
+  border-radius: 4px;
+  background: #1A1A1A;
+  color: #FFF;
+  font-family: var(--sc-font-text);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
+  text-decoration: none;
+}
+.nav__menu-cta:hover { background: #333; }
+.nav__menu-cta:focus-visible { outline: 2px solid #1A1A1A; outline-offset: 3px; }
+.nav__menu-meta {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 1.3rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgb(0 0 0 / 0.08);
+  font-family: var(--sc-font-text);
+  font-size: 0.82rem;
+  color: #6B6B6B;
+}
+.nav__menu-meta p { margin: 0; }
+.nav__menu-meta a {
+  width: fit-content;
+  color: #1A1A1A;
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.35s var(--sc-ease-out);
+}
+.nav__menu-meta a:hover { background-size: 100% 1px; }
+.nav__social { display: flex; gap: 1.1rem; margin-top: 0.4rem !important; }
+.nav__social a { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.nav.is-dark .nav__logo img { filter: invert(1); }
+.nav__brand {
+  font-family: var(--sc-font-brand);
+  font-size: 0.95rem;
+  font-weight: 600;
+  /* same tracking as the intro name, so the name flying in lands on its own shape */
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  color: var(--nav-ink);
+  transition: color 0.4s ease-out;
+}
+

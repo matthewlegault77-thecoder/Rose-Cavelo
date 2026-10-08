@@ -1,0 +1,30 @@
+/* ── INTRO SPLASH ── */
+
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: #0A0A0A;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.intro__brand {
+  font-family: var(--sc-font-brand);
+  font-weight: 500;
+  font-size: clamp(2.4rem, 6vw, 4.5rem);
+  letter-spacing: 0.08em; /* Cinzel is inscriptional capitals: it wants air, not tight tracking */
+  color: #fff;
+  white-space: nowrap;
+  will-change: transform, opacity;
+}
+.intro.is-moving .intro__brand {
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              font-size 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.intro.is-fading {
+  transition: opacity 0.4s ease-out;
+  opacity: 0;
+}

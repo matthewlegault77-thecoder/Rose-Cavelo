@@ -1,0 +1,343 @@
+/* ── LISTINGS: one home per screen ──
+   The engine pins the stage (data-sc-act="pan"); the page script below
+   drives the rail and publishes per-slide vars: --d (signed distance from
+   centre, in slides), --ad (its absolute value) and --av (scroll lag, a
+   velocity proxy). Every layer reads them at its own rate. */
+
+#listings {
+  --lx-bg: #0d0d0c;
+  --lx-ink: #f3f0ea;
+  --lx-soft: #9a958c;
+  --lx-line: rgb(243 240 234 / 0.14);
+  background: var(--lx-bg);
+  color: var(--lx-ink);
+}
+.lx-stage {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  padding: calc(var(--nav-h) + clamp(0.8rem, 3vh, 2rem)) 0 clamp(1rem, 3.5vh, 2.2rem);
+  background: var(--lx-bg);
+  touch-action: pan-y;
+}
+.lx-top, .lx-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 var(--gutter);
+}
+.lx-title {
+  font-family: var(--sc-font-display);
+  font-size: clamp(1.3rem, 2vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+}
+.lx-sub {
+  font-family: var(--sc-font-text);
+  font-size: 0.8rem;
+  color: var(--lx-soft);
+  margin: 0.5rem 0 0;
+}
+.lx-arrows { display: flex; gap: 0.6rem; }
+.lx-btn {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--lx-line);
+  background: transparent;
+  color: var(--lx-ink);
+  cursor: pointer;
+  transition: background-color 0.25s ease-out, color 0.25s ease-out, opacity 0.25s ease-out;
+}
+.lx-btn svg { width: 18px; height: 18px; }
+.lx-btn:hover { background: var(--lx-ink); color: var(--lx-bg); }
+.lx-btn:disabled { opacity: 0.28; pointer-events: none; }
+.lx-btn:focus-visible, .lx-tab:focus-visible, .lx-cta:focus-visible, .lx-all:focus-visible {
+  outline: 2px solid var(--lx-ink);
+  outline-offset: 4px;
+}
+
+.lx-viewport { position: relative; overflow: hidden; }
+.lx-rail { display: flex; height: 100%; will-change: transform; }
+.lx-slide {
+  flex: 0 0 100%;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 7rem);
+  padding: clamp(1rem, 3vh, 2.5rem) var(--gutter);
+}
+
+/* back plane: the neighbourhood, set huge, travelling faster than the slide */
+.lx-word {
+  position: absolute;
+  left: var(--gutter);
+  bottom: -0.14em;
+  margin: 0;
+  font-family: var(--sc-font-display);
+  font-size: clamp(6rem, 17vw, 18rem);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgb(243 240 234 / 0.05);
+  pointer-events: none;
+  opacity: clamp(0, 1 - var(--ad, 0) * 1.1, 1);
+  transform: translate3d(calc(var(--d, 0) * 42vw), 0, 0);
+}
+
+/* mid plane: the photo. Its window opens as it reaches centre while the
+   image inside travels the other way, so the frame reads as glass. */
+.lx-media { position: relative; height: min(62vh, 42vw); }
+.lx-frame {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  background: #1a1a18;
+  clip-path: inset(calc(var(--ad, 0) * 9%) calc(var(--ad, 0) * 13%));
+  transform: scale(calc(1 - var(--av, 0) * 0.06));
+}
+.lx-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate3d(calc(var(--d, 0) * -22%), 0, 0) scale(calc(1.1 + var(--ad, 0) * 0.24));
+}
+
+/* front plane: a second room, nearer the reader, so it moves fastest */
+.lx-inset {
+  position: absolute;
+  right: -5%;
+  bottom: -7%;
+  width: 28%;
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  overflow: hidden;
+  box-shadow: 0 34px 60px -24px rgb(0 0 0 / 0.7);
+  opacity: clamp(0, 1 - var(--ad, 0) * 0.9, 1);
+  transform: translate3d(calc(var(--d, 0) * 30vw), calc(var(--ad, 0) * 12vh), 50px);
+  pointer-events: none;
+}
+.lx-inset img { width: 100%; height: 100%; object-fit: cover; }
+
+/* copy: each line arrives on its own beat (--k), a drawer, not a slideshow */
+.lx-copy > * {
+  transform: translate3d(calc(var(--d, 0) * (7vw + var(--k, 0) * 4vw)), 0, 0);
+  opacity: clamp(0, 1 - var(--ad, 0) * (1.5 + var(--k, 0) * 0.3), 1);
+}
+.lx-hood {
+  font-family: var(--sc-font-text);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--lx-soft);
+  margin: 0 0 1.1rem;
+}
+.lx-addr {
+  font-family: var(--sc-font-display);
+  font-size: clamp(1.8rem, min(3.2vw, 5.6vh), 3.3rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+  margin: 0;
+  text-wrap: balance;
+}
+.lx-city {
+  font-family: var(--sc-font-text);
+  font-size: 0.95rem;
+  color: var(--lx-soft);
+  margin: 0.8rem 0 0;
+}
+.lx-specs {
+  display: flex;
+  gap: clamp(1.6rem, 3vw, 3.2rem);
+  margin: clamp(1.2rem, 4vh, 2.4rem) 0 0;
+  padding: clamp(0.9rem, 2.6vh, 1.5rem) 0;
+  border-block: 1px solid var(--lx-line);
+}
+.lx-specs div { display: flex; flex-direction: column; gap: 0.45rem; }
+.lx-specs dt {
+  order: 2;
+  font-family: var(--sc-font-text);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lx-soft);
+}
+.lx-specs dd {
+  margin: 0;
+  font-family: var(--sc-font-display);
+  font-size: clamp(1.25rem, 1.8vw, 1.7rem);
+  font-weight: 600;
+  line-height: 1;
+}
+.lx-buy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(1rem, 3vh, 1.8rem);
+  margin-top: clamp(1.2rem, 3.5vh, 2rem);
+}
+.lx-price {
+  font-family: var(--sc-font-display);
+  font-size: clamp(1.6rem, min(2.6vw, 4.4vh), 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+}
+.lx-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border: 1px solid var(--lx-ink);
+  border-radius: 999px;
+  font-family: var(--sc-font-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lx-ink);
+  text-decoration: none;
+  transition: background-color 0.25s ease-out, color 0.25s ease-out;
+}
+.lx-cta svg { width: 16px; height: 16px; transition: transform 0.3s var(--sc-ease-out); }
+.lx-cta:hover { background: var(--lx-ink); color: var(--lx-bg); }
+.lx-cta:hover svg { transform: translateX(4px); }
+.lx-credit {
+  font-family: var(--sc-font-text);
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--lx-soft);
+  margin: clamp(0.9rem, 2.5vh, 1.4rem) 0 0;
+}
+
+/* foot: the neighbourhoods are the navigation; the line fills as you go */
+.lx-tabs {
+  position: relative;
+  display: flex;
+  gap: clamp(1rem, 2.6vw, 2.8rem);
+  margin: 0;
+  padding: 0 0 0.9rem;
+  list-style: none;
+}
+.lx-tabs::before, .lx-tabs::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: var(--lx-line);
+}
+.lx-tabs::after {
+  background: var(--lx-ink);
+  transform-origin: left;
+  transform: scaleX(var(--lx-p, 0.2));
+}
+.lx-tab {
+  padding: 0.4rem 0;
+  border: 0;
+  background: none;
+  font-family: var(--sc-font-text);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--lx-soft);
+  cursor: pointer;
+  transition: color 0.3s ease-out;
+}
+.lx-tab:hover, .lx-tab[aria-current="true"] { color: var(--lx-ink); }
+.lx-all {
+  font-family: var(--sc-font-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--lx-ink);
+  text-decoration: none;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--lx-line);
+  transition: border-color 0.25s ease-out;
+}
+.lx-all:hover { border-color: var(--lx-ink); }
+
+/* pointer bubble over the photo (fine pointers only, set up by the script) */
+.lx-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 150;
+  width: 92px;
+  height: 92px;
+  margin: -46px 0 0 -46px;
+  display: none;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--lx-ink);
+  color: var(--lx-bg);
+  font-family: var(--sc-font-text);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  pointer-events: none;
+  transform: scale(0);
+}
+.lx-has-cursor .lx-cursor { display: grid; }
+.lx-has-cursor .lx-frame { cursor: none; }
+
+@media (max-width: 820px) {
+  .lx-sub { display: none; }
+  .lx-btn { width: 44px; height: 44px; }
+  .lx-slide {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    gap: 1.6rem;
+  }
+  .lx-media { height: min(36svh, 72vw); }
+  .lx-inset { width: 28%; right: 5%; bottom: -12%; }
+  .lx-word { top: 0; bottom: auto; font-size: 30vw; }
+  .lx-hood { margin-bottom: 0.7rem; }
+  .lx-addr { font-size: 1.55rem; }
+  .lx-city { font-size: 0.85rem; margin-top: 0.4rem; }
+  .lx-specs { margin-top: 1rem; padding: 0.8rem 0; }
+  .lx-buy { flex-direction: row; align-items: center; justify-content: space-between; margin-top: 1rem; }
+  .lx-price { font-size: 1.5rem; }
+  .lx-cta { padding: 0.8rem 1.1rem; }
+  .lx-credit { margin-top: 0.8rem; }
+  .lx-foot { gap: 1rem; }
+  /* the names don't fit a phone: the tabs become five tappable segments */
+  .lx-tabs { flex: 1; gap: 6px; padding: 0; }
+  .lx-tabs::before, .lx-tabs::after { display: none; }
+  .lx-tabs li { flex: 1; }
+  .lx-tab { width: 100%; height: 24px; font-size: 0; position: relative; }
+  .lx-tab::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 2px;
+    background: var(--lx-line);
+    transition: background-color 0.3s ease-out;
+  }
+  .lx-tab[aria-current="true"]::after { background: var(--lx-ink); }
+}
+
+/* no scroll-driven motion: an ordinary swipe/scroll row that snaps per home */
+@media (prefers-reduced-motion: reduce) {
+  #listings { height: auto !important; }
+  .lx-viewport { overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; }
+  .lx-slide { scroll-snap-align: start; }
+}

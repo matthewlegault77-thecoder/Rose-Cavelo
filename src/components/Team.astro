@@ -1,0 +1,35 @@
+---
+// People come from data/team.js; office details from data/site.js.
+import { Image } from 'astro:assets';
+import { team } from '../data/team.js';
+import { site } from '../data/site.js';
+import '../styles/team.css';
+---
+<section class="sec sec--light" id="team">
+  <div class="team-head sc-stack" data-sc-in data-sc-stagger="60">
+    <div>
+      <p class="sec__label">The Team</p>
+      <h2 class="sec__title">The people behind your project.</h2>
+    </div>
+    <p class="sec__body">Led by Rose Calvelo, who spent years managing custom home builds before moving into real estate, the team pairs a builder's eye for structure and finish with deep knowledge of Calgary's market.</p>
+  </div>
+
+  <ul class="team-grid" data-sc-in data-sc-stagger="90">
+    {team.map((p) => (
+      <li class="tm">
+        <figure class="tm__photo">
+          <Image src={p.photo} alt={p.name} widths={[320, 480, 640]} sizes="(max-width: 560px) 38vw, (max-width: 1180px) 30vw, 20vw" />
+        </figure>
+        <p class="tm__role">{p.role}</p>
+        <h3 class="tm__name">{p.name}</h3>
+        <p class="tm__bio">{p.bio}</p>
+        <p class="tm__contact">
+          <a href={`tel:${p.tel}`}>{p.phone}</a>
+          <a href={`mailto:${p.email}`}>{p.email}</a>
+        </p>
+      </li>
+    ))}
+  </ul>
+
+  <p class="team-office">{site.office.name}. {site.office.address}. <a href={`tel:${site.office.tel}`}>{site.office.phone}</a></p>
+</section>

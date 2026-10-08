@@ -1,0 +1,26 @@
+---
+// Photo on the left dissolving into the page, words on the right (styles/hero.css,
+// pointer + scroll drift in scripts/hero.js).
+// Photo: Bailey Alexander on Unsplash (unsplash.com/photos/QQ6xmTXXFZ8), Unsplash License.
+import { Image } from 'astro:assets';
+import interior from '../assets/hero/hero-interior.jpg';
+import '../styles/hero.css';
+---
+<section class="hero">
+  <figure class="hero__media">
+    <div class="hero__media-inner">
+      <Image
+        src={interior}
+        alt="A bright vaulted living room with a timber beam and warm wood floors"
+        widths={[640, 960, 1280, 1400]}
+        sizes="(max-width: 800px) 100vw, 66vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+  </figure>
+  <div class="sc-stack hero__copy">
+    <h1 class="hero__headline">Building what no one else can.</h1>
+    <p class="hero__sub">Rose Calvelo designs and builds luxury custom homes in Calgary. Every project starts with your vision and ends with something extraordinary.</p>
+  </div>
+</section>

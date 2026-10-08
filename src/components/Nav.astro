@@ -1,0 +1,33 @@
+---
+// No header bar: the logo floats top-left and is the menu (big.dk style).
+// Behaviour lives in scripts/nav.js.
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/exp-logo.png';
+import { site, sections } from '../data/site.js';
+import '../styles/nav.css';
+---
+<nav class="nav" id="mainNav">
+  <button type="button" class="nav__logo" id="menuBtn" aria-expanded="false" aria-controls="siteMenu" aria-label="Open menu">
+    <span class="nav__mark">
+      <Image src={logo} alt="eXp Realty" height={25} densities={[1, 2, 3]} loading="eager" />
+      <span class="nav__burger" aria-hidden="true"><i></i><i></i><i></i></span>
+    </span>
+    <span class="nav__brand">{site.name}</span>
+  </button>
+
+  <div class="nav__menu" id="siteMenu" role="region" aria-label="Site menu">
+    <ul class="nav__menu-links">
+      {sections.map((s, i) => <li style={`--i:${i}`}><a href={`#${s.id}`}>{s.label}</a></li>)}
+    </ul>
+    <a class="nav__menu-cta" href="#consult" style={`--i:${sections.length}`}>Book a consultation</a>
+    <div class="nav__menu-meta" style={`--i:${sections.length + 1}`}>
+      <a href={site.searchUrl}>Search all Calgary homes</a>
+      <a href={`tel:${site.office.tel}`}>{site.office.phone}</a>
+      <a href={`mailto:${site.office.email}`}>{site.office.email}</a>
+      <p>{site.office.address}</p>
+      <p class="nav__social">
+        {site.social.map((s) => <a href={s.href}>{s.label}</a>)}
+      </p>
+    </div>
+  </div>
+</nav>
